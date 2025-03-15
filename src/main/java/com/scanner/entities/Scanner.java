@@ -2,19 +2,19 @@ package com.scanner.entities;
 
 public class Scanner {
     char[] listaCaracteres = new char[100];
-    private int comlumn;
+    private int column;
     private int state;
     private char symbol = ' ';
 
     public Scanner() {
-        this.comlumn = 0;
+        this.column = 0;
         this.state = 0;
     }
 
     public void execute(String code) {
         listaCaracteres = code.toCharArray();
 
-        while (this.comlumn <= listaCaracteres.length) {
+        while (this.column <= listaCaracteres.length) {
             getBlock();
         }
     }
@@ -23,7 +23,7 @@ public class Scanner {
         Token token = new Token("BLOCK");
 
         String text = "";
-        symbol = this.comlumn == 0 ? ' ' : symbol;
+        symbol = this.column == 0 ? ' ' : symbol;
         this.state = 0;
 
         try {
@@ -59,7 +59,7 @@ public class Scanner {
                             symbol = nextChar();
                         } else {
                             state = 4;
-                            this.comlumn--;
+                            this.column--;
                         }
                         break;
                     case 4:
@@ -73,7 +73,7 @@ public class Scanner {
                             symbol = nextChar();
                         } else {
                             state = 6;
-                            this.comlumn--;
+                            this.column--;
                         }
                         break;
                     case 6:
@@ -192,7 +192,7 @@ public class Scanner {
                         System.out.println("NE");
                         return token;
                     case 4:
-                        comlumn--;
+                        column--;
                         token.setAttribute("LT");
                         System.out.println("LT");
                         return token;
@@ -213,7 +213,7 @@ public class Scanner {
                         System.out.println("GE");
                         return token;
                     case 8:
-                        comlumn--;
+                        column--;
                         token.setAttribute("GT");
                         System.out.println("GT");
                         return token;
@@ -234,6 +234,6 @@ public class Scanner {
     }
 
     private char nextChar() {
-        return listaCaracteres[this.comlumn++];
+        return listaCaracteres[this.column++];
     }
 }
