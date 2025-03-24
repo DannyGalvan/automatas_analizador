@@ -1,27 +1,33 @@
 package com.scanner.entities;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class Scanner {
     char[] listaCaracteres = new char[100];
-    private int column;
-    private int state;
+    private int column = 0;
+    private int state = 0;
     private char symbol = ' ';
-
-    public Scanner() {
-        this.column = 0;
-        this.state = 0;
-    }
+    private Environment enviroment = null;
+    private Deque<Environment> deque = new ArrayDeque<>();
 
     public void execute(String code) {
         listaCaracteres = code.toCharArray();
 
         while (this.column <= listaCaracteres.length) {
-            getBlock();
+            Token token = getBlock();
+
+            if (token != null) {
+                System.out.println(token.toString());
+            }
         }
     }
 
     private Token getBlock() {
         Token token = new Token("BLOCK");
-
         String text = "";
         symbol = this.column == 0 ? ' ' : symbol;
         this.state = 0;
@@ -45,12 +51,19 @@ public class Scanner {
                         }
                         break;
                     case 1:
+                        deque.push(new Environment());
+                        // enviroment = new Environment(enviroment);
                         token.setAttribute("{");
-                        System.out.println("{");
+                        token.setName("{");
                         return token;
                     case 2:
+                        deque.pop().seeData();
+                        // if (enviroment != null) {
+                        // enviroment.seeData();
+                        // }
+                        // enviroment = enviroment.getParent();
                         token.setAttribute("}");
-                        System.out.println("}");
+                        token.setName("}");
                         return token;
                     case 3:
                         if (Character.isLetterOrDigit(symbol)) {
@@ -63,8 +76,10 @@ public class Scanner {
                         }
                         break;
                     case 4:
+                        deque.peek().put(text, new Symbol(text));
+                        // enviroment.put(text, new Symbol(text));
                         token.setAttribute(text);
-                        System.out.println(text);
+                        token.setName("ID");
                         return token;
                     case 5:
                         if (symbol == ' ' || symbol == '\n' || symbol == '\t') {
@@ -78,7 +93,7 @@ public class Scanner {
                         break;
                     case 6:
                         token.setAttribute("DELIM");
-                        System.out.println(text);
+                        token.setName("DELIM");
                         return token;
                     default:
                         fallo();
@@ -92,6 +107,7 @@ public class Scanner {
 
     }
 
+    @SuppressWarnings("unused")
     private void getThen() {
         char symbol = ' ';
 
@@ -152,6 +168,7 @@ public class Scanner {
         }
     }
 
+    @SuppressWarnings("unused")
     private Token getOpRel() {
         Token token = new Token("oprel");
 

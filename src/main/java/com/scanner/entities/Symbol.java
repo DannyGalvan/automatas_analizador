@@ -6,16 +6,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@ToString
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class Token {
+@NoArgsConstructor
+@ToString
+public class Symbol {
     private String name;
-    private String attribute;
+    private String type;
+    private String lexema;
+    private int position;
 
-    public Token(String name) {
+    public Symbol(String name) {
         this.name = name;
     }
 }
